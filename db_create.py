@@ -1,22 +1,16 @@
 
-import sqlite3
-from _config import DATABASE_PATH
+# project/db_create.py
 
-with sqlite3.connect(DATABASE_PATH) as connection:
-    c = connection.cursor()
+from views import db
+from models import Task
+from datetime import date
 
-    # create the table
-    c.execute("""   CREATE TABLE tasks(task_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL, due_date TEXT NOT NULL, priority INTEGER NOT NULL,
-                    status INTEGER NOT NULL)
-    """)
+# create the db and the db table
+db.create_all()
 
-    # insert dummy data into the TABLE
-    c.execute(
-        'INSERT INTO tasks(name, due_date, priority, status)'
-        'VALUES("Finish this tutorial", "03/25/2015", 10, 1)'
-    )
-    c.execute(
-        'INSERT INTO tasks(name, due_date, priority, status)'
-        'VALUES("Finish RP course 2", "03/25/2015", 10, 1)'
-    )
+# insert data
+db.session.add(Task("Finish this tutorial", date(2016, 9, 22), 10, 1))
+db.session.add(Task("Finish Real Python", date(2016, 10, 3), 10, 1))
+
+# commit the changes
+db.session.commit()
